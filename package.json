@@ -1,0 +1,72 @@
+{
+  "name": "vscode-protostar-test-adapter",
+  "displayName": "Protostar Test Explorer",
+  "description": "Run your Protostar tests in the Sidebar of Visual Studio Code",
+  "icon": "img/protostar-logo-light.png",
+  "author": "Anthony BUISSET <anthony@onlydust.xyz>",
+  "publisher": "abuisset",
+  "version": "0.0.1",
+  "license": "MIT",
+  "homepage": "https://github.com/onlydustxyz/protostar-vscode-test-adapter",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/onlydustxyz/protostar-vscode-test-adapter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/onlydustxyz/protostar-vscode-test-adapter/issues"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "test",
+    "testing"
+  ],
+  "main": "out/main.js",
+  "scripts": {
+    "clean": "rimraf out *.vsix",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "rebuild": "npm run clean && npm run build",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "dependencies": {
+    "tslib": "^1.9.3",
+    "vscode-test-adapter-api": "^1.7.0",
+    "vscode-test-adapter-util": "^0.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.33",
+    "@types/vscode": "~1.23.0",
+    "typescript": "^4.0.5",
+    "vsce": "^1.95.1"
+  },
+  "engines": {
+    "vscode": "^1.23.0"
+  },
+  "extensionDependencies": [
+    "hbenl.vscode-test-explorer"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "Protostar Test Explorer configuration",
+      "properties": {
+        "protostarTestExplorer.logpanel": {
+          "description": "write diagnotic logs to an output panel",
+          "type": "boolean",
+          "scope": "resource"
+        },
+        "protostarTestExplorer.logfile": {
+          "description": "write diagnostic logs to the given file",
+          "type": "string",
+          "scope": "resource"
+        }
+      }
+    }
+  }
+}
