@@ -57,7 +57,7 @@ More information here.
 ## 🫶 Contributing
 
 Contribution guidelines are specified in [CONTRIBUTING.md](CONTRIBUTING.md).
-For contribution ideas, please checkout the [issues](https://github.com/onlydustxyz/protostar-vscode-test-adapter/issues) tab
+For contribution ideas, please refer to the [contribution page](https://contributions.onlydust.xyz).
 
 Here are the steps for local deployment:
 
