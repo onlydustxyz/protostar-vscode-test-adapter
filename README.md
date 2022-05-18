@@ -1,27 +1,65 @@
+<p align="center">
+    <img src="resources/img/logo.png">
+</p>
 <div align="center">
   <h1 align="center">Protostar Test Explorer</h1>
   <p align="center">
-    <a href="http://makeapullrequest.com">
-      <img alt="pull requests welcome badge" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat">
+    <a href="https://discord.gg/onlydust">
+        <img src="https://img.shields.io/badge/Discord-6666FF?style=for-the-badge&logo=discord&logoColor=white">
     </a>
     <a href="https://twitter.com/intent/follow?screen_name=onlydust_xyz">
-        <img src="https://img.shields.io/twitter/follow/onlydust_xyz?style=social&logo=twitter"
-            alt="follow on Twitter"></a>
-    <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"
-            alt="License"></a>
-    <a href=""><img src="https://img.shields.io/badge/semver-0.0.1-blue"
-            alt="License"></a>            
+        <img src="https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white">
+    </a>
+    <a href="https://contributions.onlydust.xyz/">
+        <img src="https://img.shields.io/badge/Contribute-6A1B9A?style=for-the-badge&logo=notion&logoColor=white">
+    </a>
   </p>
   
   <h3 align="center">vscode extension to view protostar tests in the Test Explorer.</h3>
 </div>
 
+> ## ⚠️ WARNING! ⚠️
+>
+> This repo contains highly experimental code.
+> Expect rapid iteration.
+
+## 🎟️ Description
+
+vscode extension to view protostar tests in the Test Explorer.
 This repository contains a `TestAdapter` extension for [protostar](https://docs.swmansion.com/protostar/) that works with the
 [Test Explorer](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer) extension.
 
 More documentation can be found in the [Test Adapter API repository](https://github.com/hbenl/vscode-test-adapter-api).
 
-## Contributing
+## 🎗️ Prerequisites
+
+* Install the [Test Explorer](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer) extension
+
+## 📦 Installation
+
+Launch VS Code Quick Open (`Ctrl+P`), paste the following command, and press `enter`.
+```
+ext install abuisset.vscode-protostar-test-adapter
+```
+
+## 🔬 Usage
+
+Click on the ![Test](./img/test-explorer-icon.png), you should see the list of protostar tests.
+![test view](img/tests-view.png)
+
+Then interact with your tests as any other Test adapter.
+More information here.
+
+## 🌡️ Testing
+
+:construction: Work in progress :construction:
+
+## 🫶 Contributing
+
+Contribution guidelines are specified in [CONTRIBUTING.md](CONTRIBUTING.md).
+For contribution ideas, please checkout the [issues](https://github.com/onlydustxyz/protostar-vscode-test-adapter/issues) tab
+
+Here are the steps for local deployment:
 
 * install the [Test Explorer](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer) extension
 * fork and clone this repository and open it in VS Code
@@ -33,16 +71,15 @@ You should now see a second VS Code window, the Extension Development Host.
 Open a folder in this window and click the "Test" icon in the Activity bar.
 Now you should see the your test suite in the side panel:
 
-![The fake example test suite](img/tests-view.png)
+![test view](img/tests-view.png)
 
-## Completing the implementation
+## 📄 License
 
-* implement the `debug()` method
-* Fix the `cancel()` method (sometimes it gets flaky)
-* watch the configuration for any changes that may affect the loading of test definitions and reload the test definitions if necessary
-* watch the workspace for any changes to the test files and reload the test definitions if necessary
-* watch the configuration for any changes that may affect the results of running the tests and emit an `autorun` event if necessary
-* watch the workspace for any changes to the source files and emit an `autorun` event if necessary
-* parse protostar test output to show the results of a test
-* use code lens to highlights assertion failures
-* find a way to have smoother test results (and not all at once)
+**Protostar Test Explorer** is released under the [MIT](LICENSE).
+
+## ❓ Reference 
+
+* [Test Explorer extension](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer)
+* [Test Adapter API repository](https://github.com/hbenl/vscode-test-adapter-api)
+* [protostar](https://docs.swmansion.com/protostar/)
+
