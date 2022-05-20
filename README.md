@@ -26,14 +26,12 @@
 ## 🎟️ Description
 
 vscode extension to view protostar tests in the Test Explorer.
-This repository contains a `TestAdapter` extension for [protostar](https://docs.swmansion.com/protostar/) that works with the
-[Test Explorer](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer) extension.
 
-More documentation can be found in the [Test Adapter API repository](https://github.com/hbenl/vscode-test-adapter-api).
+This extension uses vscode native TEst API
 
 ## 🎗️ Prerequisites
 
-* Install the [Test Explorer](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer) extension
+_No pre-requisite_
 
 ## 📦 Installation
 
