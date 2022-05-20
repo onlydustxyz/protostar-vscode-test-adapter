@@ -1,30 +1,27 @@
 import * as vscode from 'vscode';
-import { TestHub, testExplorerExtensionId } from 'vscode-test-adapter-api';
-import { Log, TestAdapterRegistrar } from 'vscode-test-adapter-util';
-import { ProtostarAdapter } from './adapter';
+import { RunHandler } from './runner';
+import { ResolveHandler } from './resolver';
+
 
 export async function activate(context: vscode.ExtensionContext) {
+	const controller = vscode.tests.createTestController('protostar-test-controller', 'Protostar Test Controller');
+	context.subscriptions.push(controller);
 
-	const workspaceFolder = (vscode.workspace.workspaceFolders || [])[0];
+	const outputChannel = vscode.window.createOutputChannel('Protostar Tests');
 
-	// create a simple logger that can be configured with the configuration variables
-	// `protostarTestExplorer.logpanel` and `protostarTestExplorer.logfile`
-	const log = new Log('protostarTestExplorer', workspaceFolder, 'Protostar Test Explorer Log');
-	context.subscriptions.push(log);
+	const resolveHandler = new ResolveHandler(controller, outputChannel);
+	controller.resolveHandler = async test => {
+		await resolveHandler.resolve(test);
+	};
 
-	// get the Test Explorer extension
-	const testExplorerExtension = vscode.extensions.getExtension<TestHub>(testExplorerExtensionId);
-	if (log.enabled) log.info(`Test Explorer ${testExplorerExtension ? '' : 'not '}found`);
+	vscode.workspace.onDidOpenTextDocument(resolveHandler.parseTestsInDocument);
+	vscode.workspace.onDidChangeTextDocument(e => resolveHandler.parseTestsInDocument(e.document));
 
-	if (testExplorerExtension) {
-
-		const testHub = testExplorerExtension.exports;
-
-		// this will register an ExampleTestAdapter for each WorkspaceFolder
-		context.subscriptions.push(new TestAdapterRegistrar(
-			testHub,
-			workspaceFolder => new ProtostarAdapter(workspaceFolder, log),
-			log
-		));
-	}
+	controller.createRunProfile(
+		'Run',
+		vscode.TestRunProfileKind.Run,
+		(request, token) => {
+			new RunHandler(controller, outputChannel).hanleRequest(request, token);
+		}
+	);
 }
