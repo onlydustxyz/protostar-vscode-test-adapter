@@ -10,7 +10,7 @@ export class RunHandler {
 		this.outputChannel = outputChannel
 	}
 
-	hanleRequest = async (
+	handleRequest = async (
 		request: TestRunRequest,
 		token: CancellationToken
 	) => {
@@ -51,39 +51,40 @@ export class RunHandler {
 		const testResults = output
 			.split('\n')
 			.map(line => line.match(testResultRegex))
-			.filter(match => match !== null);
+			.filter(match => match) as RegExpMatchArray[];
 
 		for (const match of testResults) {
-			const status = match![1];
-			const file = match![2];
-			const func = match![3];
+			const status = match[1];
+			const file = match[2];
+			const func = match[3];
 			const id = `${file}::${func}`
 
 			const duration = Date.now() - start;
-			const test = parent.children.get(id);
+			const test = parent.children.get(id) || parent;
 			status == `PASS` ?
-				run.passed(test!, duration) : run.failed(test!, new TestMessage(`Test failed`), duration)
+				run.passed(test, duration) : run.failed(test, new TestMessage(`Test failed`), duration)
 		}
 	}
 
 	executeTest = async (run: TestRun, test: TestItem) => {
 		const start = Date.now();
 
-		run.started(test);
-		test.children.forEach(test => run.started(test));
+		const workspaceFolder = test.uri ? workspace.getWorkspaceFolder(test.uri) : undefined;
 
-		const workspaceFolder = workspace.getWorkspaceFolder(test.uri!);
-		this.outputChannel.appendLine(`> protostar test ${test.id}`);
-		const child = spawn(`protostar`, [`test`, test.id], { cwd: workspaceFolder?.uri.fsPath });
+		if (workspaceFolder !== undefined) {
+			run.started(test);
+			this.outputChannel.appendLine(`> protostar test ${test.id}`);
+			const child = spawn(`protostar`, [`test`, test.id], { cwd: workspaceFolder.uri.fsPath });
 
-		const clean = (line: string): string => line.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')
+			const clean = (line: string): string => line.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')
 
-		child.stdout.on('data', (data: any) => {
-			this.parseTestCommandOutput(run, test, start, clean(data.toString()))
-		});
+			child.stdout.on('data', (data: any) => {
+				this.parseTestCommandOutput(run, test, start, clean(data.toString()))
+			});
 
-		await new Promise((resolve) => {
-			child.on('close', resolve)
-		})
+			await new Promise((resolve) => {
+				child.on('close', resolve)
+			})
+		}
 	};
 };

@@ -1,5 +1,5 @@
 import { Parser } from './parser';
-import { TestController, OutputChannel, RelativePattern, TestItem, workspace, Uri, TextDocument } from 'vscode';
+import { TestController, OutputChannel, RelativePattern, workspace, Uri, TextDocument } from 'vscode';
 
 export class ResolveHandler {
 	controller: TestController;
@@ -9,12 +9,8 @@ export class ResolveHandler {
 	constructor(controller: TestController, outputChannel: OutputChannel) {
 		this.controller = controller;
 		this.outputChannel = outputChannel;
-		this.parser = new Parser(this.controller, this.outputChannel)
+		this.parser = new Parser(this.controller, this.outputChannel);
 	}
-
-	resolve = async (test: TestItem | undefined) => {
-		test ? await this.parser.parseTestsInFileContents(test!) : await this.discoverAllFilesInWorkspace();
-	};
 
 	discoverAllFilesInWorkspace = () => {
 		if (!workspace.workspaceFolders) {
@@ -50,7 +46,7 @@ export class ResolveHandler {
 			return existing;
 		}
 
-		const file = this.controller.createTestItem(workspace.asRelativePath(uri), uri.path.split('/').pop()!, uri);
+		const file = this.controller.createTestItem(workspace.asRelativePath(uri.fsPath), uri.fsPath.split('/').pop()!, uri);
 		file.canResolveChildren = true;
 		this.controller.items.add(file);
 		this.outputChannel.appendLine(`[${workspace.name}] Found new test file: ${file.id}`);
@@ -74,10 +70,11 @@ export class ResolveHandler {
 };
 
 const isAllowed = (uri: Uri): boolean => {
-	const relativePath = workspace.asRelativePath(uri.fsPath);
-	const root = relativePath.split('/').at(0);
-	return !['.git', 'lib'].includes(root!) &&
+	const relativePath = workspace.asRelativePath(uri.fsPath).split('/');
+	const root = relativePath[0];
+	const filename = relativePath[relativePath.length - 1]
+	return !['.git', 'lib'].includes(root) &&
 		uri.scheme === 'file' &&
-		uri.path.match(/test_.*\.cairo/) !== null;
+		filename.match(/^test_.*\.cairo$/) !== null;
 }
 

@@ -31,7 +31,7 @@ This extension uses vscode native TEst API
 
 ## 🎗️ Prerequisites
 
-_No pre-requisite_
+Install [`yarn`](https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable) package manager.
 
 ## 📦 Installation
 
@@ -50,7 +50,16 @@ More information here.
 
 ## 🌡️ Testing
 
-:construction: Work in progress :construction:
+Unit tests are using `jest` framework.
+In order to run the tests, simply run the following command:
+```
+yarn test
+```
+
+To check code coverage, run:
+```
+yarn coverage
+```
 
 ## 🫶 Contributing
 
@@ -61,8 +70,8 @@ Here are the steps for local deployment:
 
 * install the [Test Explorer](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer) extension
 * fork and clone this repository and open it in VS Code
-* run `npm install`
-* run `npm run watch` or start the watch Task in VS Code
+* run `yarn install`
+* run `yarn watch` or start the watch Task in VS Code
 * start the debugger
 
 You should now see a second VS Code window, the Extension Development Host.
@@ -77,7 +86,6 @@ Now you should see the your test suite in the side panel:
 
 ## ❓ Reference 
 
-* [Test Explorer extension](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer)
-* [Test Adapter API repository](https://github.com/hbenl/vscode-test-adapter-api)
+* [vscode Test API](https://code.visualstudio.com/api/extension-guides/testing)
 * [protostar](https://docs.swmansion.com/protostar/)
 
