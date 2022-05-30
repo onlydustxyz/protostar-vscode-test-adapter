@@ -46,8 +46,6 @@ export class RunHandler {
 	}
 
 	parseTestCommandOutput = (run: TestRun, parent: TestItem, start: number, output: string) => {
-		this.outputChannel.appendLine(output);
-
 		const testResultRegex = /^\[(PASS|FAIL)\] (.*) (.*)$/;
 		const testResults = output
 			.split('\n')
@@ -72,21 +70,32 @@ export class RunHandler {
 
 		const workspaceFolder = test.uri ? workspace.getWorkspaceFolder(test.uri) : undefined;
 
-		if (workspaceFolder !== undefined) {
+		if (workspaceFolder !== undefined && test.uri) {
 			run.started(test);
-			this.outputChannel.appendLine(`> protostar test ${test.id}`);
-			const child = spawn(`protostar`, [`test`, test.id], { cwd: workspaceFolder.uri.fsPath });
+
+			const isRoot = workspaceFolder.uri.fsPath === test.uri.fsPath;
+			const args = isRoot ? ['test'] : ['test', test.id];
+
+			this.outputChannel.appendLine(`(${workspaceFolder.uri.fsPath}) > protostar ${args.join(" ")}`);
+			const child = spawn(`protostar`, args, { cwd: workspaceFolder.uri.fsPath });
 
 			// eslint-disable-next-line no-control-regex
 			const clean = (line: string): string => line.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')
 
 			child.stdout.on('data', (data) => {
-				this.parseTestCommandOutput(run, test, start, clean(data.toString()))
+				const output = clean(data.toString());
+				this.outputChannel.appendLine(output)
+				this.parseTestCommandOutput(run, test, start, output)
+			});
+
+			child.stderr.on('data', (data) => {
+				const output = clean(data.toString());
+				this.outputChannel.appendLine(output)
 			});
 
 			await new Promise((resolve) => {
 				child.on('close', resolve)
-			})
+			});
 		}
 	};
 }

@@ -1,26 +1,26 @@
 import * as vscode from 'vscode';
 import { DeepMockProxy, mockDeep, mockFn } from 'jest-mock-extended';
 
-export interface TestController extends vscode.TestController { };
-export interface OutputChannel extends vscode.OutputChannel { };
-export interface TestItem extends vscode.TestItem { };
-export interface TestRun extends vscode.TestRun { };
-export interface TestRunRequest extends vscode.TestRunRequest { };
-export interface CancellationToken extends vscode.CancellationToken { };
-export interface Uri extends vscode.Uri { };
-export interface TextDocument extends vscode.TextDocument { };
-export interface WorkspaceFolder extends vscode.WorkspaceFolder { };
-export interface ExtensionContext extends vscode.ExtensionContext { };
-export interface FileSystemWatcher extends vscode.FileSystemWatcher { };
-export interface TestRunProfile extends vscode.TestRunProfile { };
-export interface Disposable extends vscode.Disposable { };
-export interface TextDocumentChangeEvent extends vscode.TextDocumentChangeEvent { };
+export type TestController = vscode.TestController;
+export type OutputChannel = vscode.OutputChannel;
+export type TestItem = vscode.TestItem;
+export type TestRun = vscode.TestRun;
+export type TestRunRequest = vscode.TestRunRequest;
+export type CancellationToken = vscode.CancellationToken;
+export type Uri = vscode.Uri;
+export type TextDocument = vscode.TextDocument;
+export type WorkspaceFolder = vscode.WorkspaceFolder;
+export type ExtensionContext = vscode.ExtensionContext;
+export type FileSystemWatcher = vscode.FileSystemWatcher;
+export type TestRunProfile = vscode.TestRunProfile;
+export type Disposable = vscode.Disposable;
+export type TextDocumentChangeEvent = vscode.TextDocumentChangeEvent;
 
 export const RelativePattern = mockFn();
 export const TestMessage = mockFn();
 
 export namespace workspace {
-    export var name = '';
+    export var name = 'workspace';
     export const fs = mockDeep<vscode.FileSystem>();
     export const asRelativePath = mockFn();
     export var workspaceFolders = [] as DeepMockProxy<vscode.WorkspaceFolder>[] | null;
@@ -35,7 +35,7 @@ export enum TestRunProfileKind {
     Run = 1,
     Debug = 2,
     Coverage = 3,
-};
+}
 
 export namespace tests {
     export const createTestController = mockFn();
