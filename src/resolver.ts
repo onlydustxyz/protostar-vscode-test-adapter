@@ -46,7 +46,8 @@ export class ResolveHandler {
 			return existing;
 		}
 
-		const file = this.controller.createTestItem(workspace.asRelativePath(uri.fsPath), uri.fsPath.split('/').pop()!, uri);
+        const path = uri.fsPath.split('/');
+		const file = this.controller.createTestItem(workspace.asRelativePath(uri.fsPath), path[path.length-1], uri);
 		file.canResolveChildren = true;
 		this.controller.items.add(file);
 		this.outputChannel.appendLine(`[${workspace.name}] Found new test file: ${file.id}`);
@@ -67,7 +68,7 @@ export class ResolveHandler {
 			await this.parser.parseTestsInFileContents(file);
 		}
 	}
-};
+}
 
 const isAllowed = (uri: Uri): boolean => {
 	const relativePath = workspace.asRelativePath(uri.fsPath).split('/');

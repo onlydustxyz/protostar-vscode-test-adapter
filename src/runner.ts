@@ -28,6 +28,7 @@ export class RunHandler {
 		// The `TestMessage` can contain extra information, like a failing location or
 		// a diff output. But here we'll just give it a textual message.
 		while (queue.length > 0 && !token.isCancellationRequested) {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const test = queue.pop()!;
 
 			// Skip tests the user asked to exclude
@@ -76,9 +77,10 @@ export class RunHandler {
 			this.outputChannel.appendLine(`> protostar test ${test.id}`);
 			const child = spawn(`protostar`, [`test`, test.id], { cwd: workspaceFolder.uri.fsPath });
 
+			// eslint-disable-next-line no-control-regex
 			const clean = (line: string): string => line.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')
 
-			child.stdout.on('data', (data: any) => {
+			child.stdout.on('data', (data) => {
 				this.parseTestCommandOutput(run, test, start, clean(data.toString()))
 			});
 
@@ -87,4 +89,4 @@ export class RunHandler {
 			})
 		}
 	};
-};
+}
