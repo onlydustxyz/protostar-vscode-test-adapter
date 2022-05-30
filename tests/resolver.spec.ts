@@ -14,8 +14,6 @@ jest.mock('../src/parser', () => {
 });
 
 describe('resolver', () => {
-
-
     const controller = mockDeep<vscode.TestController>();
     const outputChannel = mockDeep<vscode.OutputChannel>();
 
@@ -26,6 +24,14 @@ describe('resolver', () => {
         uri: {
             scheme: 'file',
             fsPath: 'path/to/test_contract.cairo',
+        }
+    });
+
+    const root = mockDeep<vscode.TestItem>({
+        id: 'root',
+        uri: {
+            scheme: 'file',
+            fsPath: 'root/',
         }
     });
 
@@ -44,18 +50,18 @@ describe('resolver', () => {
         it('should not create a file if test in lib folder', () => {
             vscode.workspace.asRelativePath.calledWith(testFile.uri!.fsPath).mockReturnValue("lib/path/to/test_contract.cairo");
 
-            expect(resolver.getOrCreateFile(testFile.uri!)).toBeNull();
+            expect(resolver.getOrCreateFile(root, testFile.uri!)).toBeNull();
 
-            expect(controller.items.get).not.toHaveBeenCalled();
+            expect(root.children.get).not.toHaveBeenCalled();
             expect(controller.createTestItem).not.toHaveBeenCalled();
         });
 
         it('should not create a file if test in .git folder', () => {
             vscode.workspace.asRelativePath.calledWith(testFile.uri!.fsPath).mockReturnValue(".git/path/to/test_contract.cairo");
 
-            expect(resolver.getOrCreateFile(testFile.uri!)).toBeNull();
+            expect(resolver.getOrCreateFile(root, testFile.uri!)).toBeNull();
 
-            expect(controller.items.get).not.toHaveBeenCalled();
+            expect(root.children.get).not.toHaveBeenCalled();
             expect(controller.createTestItem).not.toHaveBeenCalled();
         });
 
@@ -63,27 +69,27 @@ describe('resolver', () => {
             const directoryUri = { ...testFile.uri!, ...{ scheme: 'directory' } };
             vscode.workspace.asRelativePath.calledWith(testFile.uri!.fsPath).mockReturnValue(testFile.uri!.fsPath);
 
-            expect(resolver.getOrCreateFile(directoryUri)).toBeNull();
+            expect(resolver.getOrCreateFile(root, directoryUri)).toBeNull();
 
-            expect(controller.items.get).not.toHaveBeenCalled();
+            expect(root.children.get).not.toHaveBeenCalled();
             expect(controller.createTestItem).not.toHaveBeenCalled();
         });
 
         it('should not create a file if test does not match pattern', () => {
             vscode.workspace.asRelativePath.calledWith(testFile.uri!.fsPath).mockReturnValue("path/to/not_a_test_contract.cairo");
 
-            expect(resolver.getOrCreateFile(testFile.uri!)).toBeNull();
+            expect(resolver.getOrCreateFile(root, testFile.uri!)).toBeNull();
 
-            expect(controller.items.get).not.toHaveBeenCalled();
+            expect(root.children.get).not.toHaveBeenCalled();
             expect(controller.createTestItem).not.toHaveBeenCalled();
         });
 
         it('should not create a file if already exists', () => {
             vscode.workspace.asRelativePath.calledWith(testFile.uri!.fsPath).mockReturnValue(testFile.uri!.fsPath);
 
-            controller.items.get.mockReturnValueOnce(testItem);
+            root.children.get.mockReturnValueOnce(testItem);
 
-            expect(resolver.getOrCreateFile(testFile.uri!)).toBe(testItem);
+            expect(resolver.getOrCreateFile(root, testFile.uri!)).toBe(testItem);
 
             expect(controller.createTestItem).not.toHaveBeenCalled();
         });
@@ -91,13 +97,13 @@ describe('resolver', () => {
         it('should create a file if it does not already exists', () => {
             vscode.workspace.asRelativePath.calledWith(testFile.uri!.fsPath).mockReturnValue(testFile.uri!.fsPath);
 
-            controller.items.get.mockReturnValueOnce(undefined);
+            root.children.get.mockReturnValueOnce(undefined);
             controller.createTestItem.calledWith(testFile.uri!.fsPath, 'test_contract.cairo', testFile.uri!).mockReturnValue(testItem);
 
-            const file = resolver.getOrCreateFile(testFile.uri!);
+            const file = resolver.getOrCreateFile(root, testFile.uri!);
             expect(file!.canResolveChildren).toBeTruthy();
 
-            expect(controller.items.add).toHaveBeenCalledWith(file);
+            expect(root.children.add).toHaveBeenCalledWith(file);
         });
     });
 
@@ -123,6 +129,9 @@ describe('resolver', () => {
 
             vscode.workspace.workspaceFolders = [starkonquest, starklings];
 
+            controller.createTestItem.calledWith(starkonquest.name, starkonquest.name, starkonquest.uri).mockReturnValue(root);
+            controller.createTestItem.calledWith(starklings.name, starklings.name, starklings.uri).mockReturnValue(root);
+
             const watcher = mockDeep<vscode.FileSystemWatcher>();
 
             watcher.onDidCreate.mockImplementation((listener: (e: vscode.Uri) => any) => {
@@ -137,7 +146,7 @@ describe('resolver', () => {
 
             watcher.onDidDelete.mockImplementation((listener: (e: vscode.Uri) => any) => {
                 listener(mockDeep<vscode.Uri>());
-                expect(controller.items.delete).toHaveBeenCalled();
+                expect(root.children.delete).toHaveBeenCalled();
                 return mockDeep<vscode.Disposable>();
             });
 
@@ -146,7 +155,7 @@ describe('resolver', () => {
             vscode.workspace.findFiles.mockReturnValueOnce([testFile.uri!, testFile.uri!]);
 
             vscode.workspace.asRelativePath.mockReturnValue(testFile.uri!.fsPath);
-            controller.items.get.mockReturnValue(testFile);
+            root.children.get.mockReturnValue(testFile);
 
             await resolver.discoverAllFilesInWorkspace();
 
@@ -157,7 +166,7 @@ describe('resolver', () => {
             expect(watcher.onDidChange).toHaveBeenCalledTimes(2);
             expect(watcher.onDidDelete).toHaveBeenCalledTimes(2);
 
-            expect(controller.items.get).toHaveBeenCalledTimes(3);
+            expect(root.children.get).toHaveBeenCalledTimes(3);
         });
     });
 
@@ -172,7 +181,8 @@ describe('resolver', () => {
 
         it('should call the parser if file is created', async () => {
             vscode.workspace.asRelativePath.mockReturnValue(testFile.uri!.fsPath);
-            controller.items.get.mockReturnValue(testFile);
+            controller.items.get.mockReturnValue(root);
+            root.children.get.mockReturnValue(testFile);
 
             await resolver.parseTestsInFile(testFile.uri!);
 
@@ -191,7 +201,8 @@ describe('resolver', () => {
 
         it('should call the parser if file is created', async () => {
             vscode.workspace.asRelativePath.mockReturnValue(testFile.uri!.fsPath);
-            controller.items.get.mockReturnValue(testFile);
+            controller.items.get.mockReturnValue(root);
+            root.children.get.mockReturnValue(testFile);
             testDocument.getText.mockReturnValue('content');
 
             await resolver.parseTestsInDocument(testDocument);

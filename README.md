@@ -33,6 +33,15 @@ This extension uses vscode native TEst API
 
 Install [`yarn`](https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable) package manager.
 
+This extension assume that all tests of a workspace can be run with the `protostar test` command without arguments.
+You might need to configure your `protostar.toml` configuration file to do so.
+For instance:
+```
+["protostar.shared_command_configs"]
+cairo_path = ["./lib/cairo_contracts/src"]
+target = "contracts"
+```
+
 ## 📦 Installation
 
 Launch VS Code Quick Open (`Ctrl+P`), paste the following command, and press `enter`.

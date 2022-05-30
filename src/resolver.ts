@@ -1,5 +1,5 @@
 import { Parser } from './parser';
-import { TestController, OutputChannel, RelativePattern, workspace, Uri, TextDocument } from 'vscode';
+import { TestController, OutputChannel, RelativePattern, workspace, Uri, TextDocument, TestItem } from 'vscode';
 
 export class ResolveHandler {
 	controller: TestController;
@@ -19,15 +19,18 @@ export class ResolveHandler {
 
 		return Promise.all(
 			workspace.workspaceFolders.map(async workspaceFolder => {
+				const root = this.controller.createTestItem(workspaceFolder.name, workspaceFolder.name, workspaceFolder.uri);
+				this.controller.items.add(root);
+
 				const pattern = new RelativePattern(workspaceFolder, '**/test_*.cairo');
 				const watcher = workspace.createFileSystemWatcher(pattern);
 
-				watcher.onDidCreate(uri => this.getOrCreateFile(uri));
+				watcher.onDidCreate(uri => this.getOrCreateFile(root, uri));
 				watcher.onDidChange(uri => this.parseTestsInFile(uri));
-				watcher.onDidDelete(uri => this.controller.items.delete(uri.toString()));
+				watcher.onDidDelete(uri => root.children.delete(uri.toString()));
 
 				for (const file of await workspace.findFiles(pattern)) {
-					this.getOrCreateFile(file);
+					this.getOrCreateFile(root, file);
 				}
 
 				return watcher;
@@ -38,10 +41,10 @@ export class ResolveHandler {
 	// In this function, we'll get the file TestItem if we've already found it,
 	// otherwise we'll create it with `canResolveChildren = true` to indicate it
 	// can be passed to the `controller.resolveHandler` to gets its children.
-	getOrCreateFile = (uri: Uri) => {
+	getOrCreateFile = (root: TestItem, uri: Uri) => {
 		if (!isAllowed(uri)) { return null; }
 
-		const existing = this.controller.items.get(uri.toString());
+		const existing = root.children.get(uri.toString());
 		if (existing) {
 			return existing;
 		}
@@ -49,23 +52,33 @@ export class ResolveHandler {
         const path = uri.fsPath.split('/');
 		const file = this.controller.createTestItem(workspace.asRelativePath(uri.fsPath), path[path.length-1], uri);
 		file.canResolveChildren = true;
-		this.controller.items.add(file);
+		root.children.add(file);
 		this.outputChannel.appendLine(`[${workspace.name}] Found new test file: ${file.id}`);
 
 		return file;
 	}
 
 	parseTestsInDocument = async (e: TextDocument) => {
-		const file = this.getOrCreateFile(e.uri);
-		if (file) {
-			await this.parser.parseTestsInFileContents(file, e.getText());
+		if(workspace.name) {
+			const root = this.controller.items.get(workspace.name);
+			if(root) {
+				const file = this.getOrCreateFile(root, e.uri);
+				if (file) {
+					await this.parser.parseTestsInFileContents(file, e.getText());
+				}
+			}
 		}
 	}
 
 	parseTestsInFile = async (uri: Uri) => {
-		const file = this.getOrCreateFile(uri);
-		if (file) {
-			await this.parser.parseTestsInFileContents(file);
+		if(workspace.name) {
+			const root = this.controller.items.get(workspace.name);
+			if(root) {
+				const file = this.getOrCreateFile(root, uri);
+				if (file) {
+					await this.parser.parseTestsInFileContents(file);
+				}
+			}
 		}
 	}
 }

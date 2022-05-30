@@ -40,6 +40,7 @@ describe('runner', () => {
                 expect(options!.cwd).toStrictEqual(workspaceFolder.uri.fsPath);
 
                 childProcess.stdout.write(`[PASS] test_contract.cairo test_function`);
+                childProcess.stderr.write("Progress [16/24]");
 
                 childProcess.end();
             })
@@ -52,6 +53,49 @@ describe('runner', () => {
 
             expect(testRun.started).toHaveBeenCalledWith(testItem);
             expect(testRun.passed).toHaveBeenCalledWith(testItem, anyNumber());
+        });
+
+        it('should execute a test from root and update its state when success', async () => {
+            const testRun = mockDeep<vscode.TestRun>();
+
+            const workspaceFolder = mockDeep<vscode.WorkspaceFolder>({
+                uri: {
+                    scheme: 'directory',
+                    fsPath: 'path/to/starklings',
+                },
+                name: "starklings",
+                index: 1
+            });
+            
+            const root = mockDeep<vscode.TestItem>({
+                id: 'starklings',
+                uri: workspaceFolder.uri,
+            });
+
+            const testItem = mockDeep<vscode.TestItem>({
+                id: 'test_contract.cairo::test_function',
+            });
+
+            const spawn = mockSpawn(function (childProcess: MockChildProcess) {
+                const { cmd, args, options } = childProcess;
+                expect(cmd).toStrictEqual('protostar');
+                expect(args).toStrictEqual([`test`]);
+                expect(options!.cwd).toStrictEqual(workspaceFolder.uri.fsPath);
+
+                childProcess.stdout.write(`[PASS] test_contract.cairo test_function`);
+                childProcess.stderr.write("Progress [16/24]");
+
+                childProcess.end();
+            });
+
+            vscode.workspace.getWorkspaceFolder.mockReturnValue(workspaceFolder);
+            testItem.children.get.calledWith(root.id).mockReturnValue(testItem);
+
+            (child_process.spawn as jest.Mock).mockImplementation(spawn);
+            await runner.executeTest(testRun, root);
+
+            expect(testRun.started).toHaveBeenCalledWith(root);
+            expect(testRun.passed).toHaveBeenCalledWith(root, anyNumber());
         });
     });
 
