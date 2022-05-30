@@ -74,23 +74,19 @@ export class RunHandler {
 			run.started(test);
 
 			const isRoot = workspaceFolder.uri.fsPath === test.uri.fsPath;
-			const args = isRoot ? ['test'] : ['test', test.id];
+			const args = ['-p', 'ci', 'test'];
+			if(!isRoot) { args.push(test.id); }
 
 			this.outputChannel.appendLine(`(${workspaceFolder.uri.fsPath}) > protostar ${args.join(" ")}`);
 			const child = spawn(`protostar`, args, { cwd: workspaceFolder.uri.fsPath });
 
-			// eslint-disable-next-line no-control-regex
-			const clean = (line: string): string => line.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')
-
 			child.stdout.on('data', (data) => {
-				const output = clean(data.toString());
-				this.outputChannel.appendLine(output)
-				this.parseTestCommandOutput(run, test, start, output)
+				this.outputChannel.appendLine(data.toString())
+				this.parseTestCommandOutput(run, test, start, data.toString())
 			});
 
 			child.stderr.on('data', (data) => {
-				const output = clean(data.toString());
-				this.outputChannel.appendLine(output)
+				this.outputChannel.appendLine(data.toString())
 			});
 
 			await new Promise((resolve) => {

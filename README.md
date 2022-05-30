@@ -42,6 +42,13 @@ cairo_path = ["./lib/cairo_contracts/src"]
 target = "contracts"
 ```
 
+Also, you need to create a "CI" profile that removes colors from `protostar` output for this extension to work properly.
+Add the following section in the `protostar.toml` file:
+```
+[profile.ci.protostar.shared_command_configs]
+no_color=true
+```
+
 ## 📦 Installation
 
 Launch VS Code Quick Open (`Ctrl+P`), paste the following command, and press `enter`.

@@ -27,7 +27,7 @@ describe('runner', () => {
             const workspaceFolder = mockDeep<vscode.WorkspaceFolder>({
                 uri: {
                     scheme: 'directory',
-                    path: 'path/to/starklings',
+                    fsPath: 'path/to/starklings',
                 },
                 name: "starklings",
                 index: 1
@@ -36,7 +36,7 @@ describe('runner', () => {
             const spawn = mockSpawn(function (childProcess: MockChildProcess) {
                 const { cmd, args, options } = childProcess;
                 expect(cmd).toStrictEqual('protostar');
-                expect(args).toStrictEqual([`test`, testItem.id]);
+                expect(args).toStrictEqual(["-p", "ci", "test", testItem.id]);
                 expect(options!.cwd).toStrictEqual(workspaceFolder.uri.fsPath);
 
                 childProcess.stdout.write(`[PASS] test_contract.cairo test_function`);
@@ -79,7 +79,7 @@ describe('runner', () => {
             const spawn = mockSpawn(function (childProcess: MockChildProcess) {
                 const { cmd, args, options } = childProcess;
                 expect(cmd).toStrictEqual('protostar');
-                expect(args).toStrictEqual([`test`]);
+                expect(args).toStrictEqual(["-p", "ci", "test"]);
                 expect(options!.cwd).toStrictEqual(workspaceFolder.uri.fsPath);
 
                 childProcess.stdout.write(`[PASS] test_contract.cairo test_function`);
@@ -118,7 +118,7 @@ describe('runner', () => {
             const spawn = mockSpawn(function (childProcess: MockChildProcess) {
                 const { cmd, args, options } = childProcess;
                 expect(cmd).toStrictEqual('protostar');
-                expect(args).toStrictEqual([`test`, testItem.id]);
+                expect(args).toStrictEqual(["-p", "ci", "test", testItem.id]);
                 expect(options!.cwd).toStrictEqual(workspaceFolder.uri.fsPath);
 
                 childProcess.stdout.write(`[PASS] test_contract.cairo test_function_success`);
@@ -178,7 +178,7 @@ describe('runner', () => {
             const spawn = mockSpawn(function (childProcess: MockChildProcess) {
                 const { cmd, args, options } = childProcess;
                 expect(cmd).toStrictEqual('protostar');
-                expect(args).toStrictEqual([`test`, testItem.id]);
+                expect(args).toStrictEqual(["-p", "ci", "test", testItem.id]);
                 expect(options!.cwd).toStrictEqual(workspaceFolder.uri.fsPath);
 
                 childProcess.stdout.write(`[PASS] test_contract.cairo test_function_success`);
@@ -231,7 +231,7 @@ describe('runner', () => {
             const spawn = mockSpawn(function (childProcess: MockChildProcess) {
                 const { cmd, args, options } = childProcess;
                 expect(cmd).toStrictEqual('protostar');
-                expect(args).toStrictEqual([`test`, testItemIncluded.id]);
+                expect(args).toStrictEqual(["-p", "ci", "test", testItemIncluded.id]);
                 expect(options!.cwd).toStrictEqual(workspaceFolder.uri.fsPath);
 
                 childProcess.stdout.write(`[PASS] test_contract.cairo test_function_success`);
@@ -251,7 +251,7 @@ describe('runner', () => {
             (child_process.spawn as jest.Mock).mockImplementation(spawn);
 
             const excludedTests = mockDeep<vscode.TestItem[]>();
-            jest.mocked(excludedTests.includes).mockImplementation((searchElement: vscode.TestItem, fromIndex?: number) => {
+            jest.mocked(excludedTests.includes).mockImplementation((searchElement: vscode.TestItem) => {
                 return searchElement.id === testItemExcluded.id;
             })
 
