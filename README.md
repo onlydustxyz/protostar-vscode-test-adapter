@@ -43,6 +43,7 @@ ext install abuisset.vscode-protostar-test-adapter
 ## 🔬 Usage
 
 Click on the ![Test](./img/test-explorer-icon.png), you should see the list of protostar tests.
+
 ![test view](img/tests-view.png)
 
 Then interact with your tests as any other Test adapter.
@@ -59,6 +60,16 @@ yarn test
 To check code coverage, run:
 ```
 yarn coverage
+```
+
+To check code formatting, run:
+```
+yarn lint
+```
+
+You can also format your code by using the following command:
+```
+yarn lint:fix
 ```
 
 ## 🫶 Contributing

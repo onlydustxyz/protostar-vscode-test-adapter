@@ -11,6 +11,38 @@ on:
 
 jobs:
   tests:
+    name: Unit tests and code coverage 
+    runs-on: ubuntu-latest
+    permissions: 
+      actions: write
+      checks: write
+      contents: write
+      deployments: write
+      id-token: write
+      issues: write
+      discussions: write
+      packages: write
+      pages: write
+      pull-requests: write
+      repository-projects: write
+      security-events: write
+      statuses: write
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3.2.0
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Check unit tests and code coverage
+        run: yarn coverage
+
+  linting:
+    name: Code formatting 
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -23,9 +55,5 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Unit tests code coverage checks
-        uses: willcaul/jest-github-action@v1.0.2
-        with:
-          test-command: yarn test
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Code formatting check
+        run: yarn lint

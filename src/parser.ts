@@ -29,11 +29,11 @@ export class Parser {
 
 				const id = `${file.id}::${label}`;
 				this.outputChannel.appendLine(`[${workspace.name}] Found new test: ${id}`);
-				return this.controller.createTestItem(id, label!, file.uri);
+				return this.controller.createTestItem(id, label, file.uri);
 			})
 			.filter(line => !!line) as TestItem[]
 			;
 
 		file.children.replace(children);
 	}
-};
+}
