@@ -60,7 +60,7 @@ ext install abuisset.vscode-protostar-test-adapter
 
 Click on the ![Test](./img/test-explorer-icon.png), you should see the list of protostar tests.
 
-![test view](img/tests-view.png)
+![test view](img/run-tests.gif)
 
 Then interact with your tests as any other Test adapter.
 More information here.
