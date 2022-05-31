@@ -45,7 +45,7 @@ export class RunHandler {
 		run.end();
 	}
 
-	parseTestCommandOutput = (run: TestRun, parent: TestItem, start: number, output: string) => {
+	parseTestCommandOutput = (run: TestRun, test: TestItem, start: number, output: string) => {
 		const testResultRegex = /^\[(PASS|FAIL)\] (.*) (.*)$/;
 		const testResults = output
 			.split('\n')
@@ -59,9 +59,10 @@ export class RunHandler {
 			const id = `${file}::${func}`
 
 			const duration = Date.now() - start;
-			const test = parent.children.get(id) || parent;
+			const parent = test.children.get(file) || test
+			const testCase = parent.children.get(id) || parent;
 			status == `PASS` ?
-				run.passed(test, duration) : run.failed(test, new TestMessage(`Test failed`), duration)
+				run.passed(testCase, duration) : run.failed(testCase, new TestMessage(`Test failed`), duration)
 		}
 	}
 

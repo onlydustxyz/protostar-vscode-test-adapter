@@ -51,7 +51,7 @@ export class ResolveHandler {
 		}
 
 		const path = uri.fsPath.split('/');
-		const file = this.controller.createTestItem(workspace.asRelativePath(uri.fsPath), path[path.length - 1], uri);
+		const file = this.controller.createTestItem(workspace.asRelativePath(uri.fsPath, false), path[path.length - 1], uri);
 		file.canResolveChildren = true;
 		root.children.add(file);
 		this.outputChannel.appendLine(`[${workspace.name}] Found new test file: ${file.id}`);
