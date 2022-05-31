@@ -71,6 +71,26 @@ Click on the Test icon <img src="img/test-explorer-icon.png" width="30"/>, you s
 
 Then interact with your tests as any other Test extension.
 
+## 🫶 Contributing
+
+Contribution guidelines are specified in [CONTRIBUTING.md](CONTRIBUTING.md).
+For contribution ideas, please refer to the [contribution page](https://contributions.onlydust.xyz).
+
+Here are the steps for local deployment:
+
+* install [`yarn`](https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable) package manager.
+* install the [Test Explorer](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer) extension
+* fork and clone this repository and open it in VS Code
+* run `yarn install`
+* run `yarn watch` or start the watch Task in VS Code
+* start the debugger
+
+You should now see a second VS Code window, the Extension Development Host.
+Open a folder in this window and click the "Test" icon in the Activity bar.
+Now you should see the your test suite in the side panel:
+
+![test view](img/tests-view.png)
+
 ## 🌡️ Testing
 
 Unit tests are using `jest` framework.
@@ -93,26 +113,6 @@ You can also format your code by using the following command:
 ```
 yarn lint:fix
 ```
-
-## 🫶 Contributing
-
-Contribution guidelines are specified in [CONTRIBUTING.md](CONTRIBUTING.md).
-For contribution ideas, please refer to the [contribution page](https://contributions.onlydust.xyz).
-
-Here are the steps for local deployment:
-
-* install [`yarn`](https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable) package manager.
-* install the [Test Explorer](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer) extension
-* fork and clone this repository and open it in VS Code
-* run `yarn install`
-* run `yarn watch` or start the watch Task in VS Code
-* start the debugger
-
-You should now see a second VS Code window, the Extension Development Host.
-Open a folder in this window and click the "Test" icon in the Activity bar.
-Now you should see the your test suite in the side panel:
-
-![test view](img/tests-view.png)
 
 ## 📄 License
 
