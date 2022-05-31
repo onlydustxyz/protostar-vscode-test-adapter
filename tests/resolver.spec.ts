@@ -167,6 +167,8 @@ describe('resolver', () => {
             expect(watcher.onDidDelete).toHaveBeenCalledTimes(2);
 
             expect(root.children.get).toHaveBeenCalledTimes(3);
+            expect(parser.parseTestsInFileContents).toHaveBeenCalledWith(testFile);
+            expect(parser.parseTestsInFileContents).toHaveBeenCalledTimes(3);
         });
     });
 

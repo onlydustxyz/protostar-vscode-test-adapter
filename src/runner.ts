@@ -75,7 +75,7 @@ export class RunHandler {
 
 			const isRoot = workspaceFolder.uri.fsPath === test.uri.fsPath;
 			const args = ['-p', 'ci', 'test'];
-			if(!isRoot) { args.push(test.id); }
+			if (!isRoot) { args.push(test.id); }
 
 			this.outputChannel.appendLine(`(${workspaceFolder.uri.fsPath}) > protostar ${args.join(" ")}`);
 			const child = spawn(`protostar`, args, { cwd: workspaceFolder.uri.fsPath });
