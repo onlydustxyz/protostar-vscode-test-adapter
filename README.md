@@ -31,22 +31,29 @@ This extension uses vscode native TEst API
 
 ## 🎗️ Prerequisites
 
-Install [`yarn`](https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable) package manager.
+**Minimum protostar version required:** `0.2.1`
 
-This extension assume that all tests of a workspace can be run with the `protostar test` command without arguments.
-You might need to configure your `protostar.toml` configuration file to do so.
-For instance:
+Install or upgrade protostar using the command below:
 ```
-["protostar.shared_command_configs"]
+curl -L https://raw.githubusercontent.com/software-mansion/protostar/master/install.sh | bash
+```
+
+For this extension to work properly, you need to create a dedicated profile named `ci`.
+This profile should be configured to:
+* have no color on output
+* have a default target to run all tests
+
+Here is an example of the corresponding section in `protostar.toml` file:
+```
+[profile.ci.protostar.shared_command_configs]
+no_color=true
 cairo_path = ["./lib/cairo_contracts/src"]
 target = "contracts"
 ```
 
-Also, you need to create a "CI" profile that removes colors from `protostar` output for this extension to work properly.
-Add the following section in the `protostar.toml` file:
+you can test your setup by running the following command:
 ```
-[profile.ci.protostar.shared_command_configs]
-no_color=true
+protostar -p ci test
 ```
 
 ## 📦 Installation
@@ -94,6 +101,7 @@ For contribution ideas, please refer to the [contribution page](https://contribu
 
 Here are the steps for local deployment:
 
+* install [`yarn`](https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable) package manager.
 * install the [Test Explorer](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer) extension
 * fork and clone this repository and open it in VS Code
 * run `yarn install`
