@@ -41,6 +41,15 @@ describe('resolver', () => {
 
     const testItem = mockDeep<vscode.TestItem>();
 
+    const workspaceFolder = mockDeep<vscode.WorkspaceFolder>({
+        uri: {
+            scheme: 'directory',
+            fsPath: 'path/to/starklings',
+        },
+        name: "starklings",
+        index: 1
+    });
+
     beforeEach(() => {
         jest.resetAllMocks();
     });
@@ -183,6 +192,7 @@ describe('resolver', () => {
 
         it('should call the parser if file is created', async () => {
             vscode.workspace.asRelativePath.mockReturnValue(testFile.uri!.fsPath);
+            vscode.workspace.getWorkspaceFolder.calledWith(testFile.uri).mockReturnValue(workspaceFolder);
             controller.items.get.mockReturnValue(root);
             root.children.get.mockReturnValue(testFile);
 
@@ -203,6 +213,7 @@ describe('resolver', () => {
 
         it('should call the parser if file is created', async () => {
             vscode.workspace.asRelativePath.mockReturnValue(testFile.uri!.fsPath);
+            vscode.workspace.getWorkspaceFolder.calledWith(testDocument.uri).mockReturnValue(workspaceFolder);
             controller.items.get.mockReturnValue(root);
             root.children.get.mockReturnValue(testFile);
             testDocument.getText.mockReturnValue('content');

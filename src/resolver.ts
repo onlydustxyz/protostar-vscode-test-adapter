@@ -27,7 +27,7 @@ export class ResolveHandler {
 
 				watcher.onDidCreate(uri => this.getOrCreateFile(root, uri));
 				watcher.onDidChange(uri => this.parseTestsInFile(uri));
-				watcher.onDidDelete(uri => root.children.delete(uri.toString()));
+				watcher.onDidDelete(uri => root.children.delete(workspace.asRelativePath(uri.fsPath, false)));
 
 				for (const file of await workspace.findFiles(pattern)) {
 					const testItem = this.getOrCreateFile(root, file);
@@ -60,8 +60,9 @@ export class ResolveHandler {
 	}
 
 	parseTestsInDocument = async (e: TextDocument) => {
-		if (workspace.name) {
-			const root = this.controller.items.get(workspace.name);
+		const workspaceFolder = workspace.getWorkspaceFolder(e.uri)
+		if (workspaceFolder) {
+			const root = this.controller.items.get(workspaceFolder.name);
 			if (root) {
 				const file = this.getOrCreateFile(root, e.uri);
 				if (file) {
@@ -72,8 +73,9 @@ export class ResolveHandler {
 	}
 
 	parseTestsInFile = async (uri: Uri) => {
-		if (workspace.name) {
-			const root = this.controller.items.get(workspace.name);
+		const workspaceFolder = workspace.getWorkspaceFolder(uri)
+		if (workspaceFolder) {
+			const root = this.controller.items.get(workspaceFolder.name);
 			if (root) {
 				const file = this.getOrCreateFile(root, uri);
 				if (file) {
