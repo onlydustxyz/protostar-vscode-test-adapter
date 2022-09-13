@@ -19,28 +19,32 @@ export type TextDocumentChangeEvent = vscode.TextDocumentChangeEvent;
 export const RelativePattern = mockFn();
 export const TestMessage = mockFn();
 
+export namespace commands {
+  export const executeCommand = mockFn();
+}
+
 export namespace workspace {
-    export var name = 'workspace';
-    export const fs = mockDeep<vscode.FileSystem>();
-    export const asRelativePath = mockFn();
-    export var workspaceFolders = [] as DeepMockProxy<vscode.WorkspaceFolder>[] | null;
-    export const createFileSystemWatcher = mockFn();
-    export const findFiles = mockFn();
-    export const onDidOpenTextDocument = mockFn();
-    export const onDidChangeTextDocument = mockFn();
-    export const getWorkspaceFolder = mockFn();
+  export var name = 'workspace';
+  export const fs = mockDeep<vscode.FileSystem>();
+  export const asRelativePath = mockFn();
+  export var workspaceFolders = [] as DeepMockProxy<vscode.WorkspaceFolder>[] | null;
+  export const createFileSystemWatcher = mockFn();
+  export const findFiles = mockFn();
+  export const onDidOpenTextDocument = mockFn();
+  export const onDidChangeTextDocument = mockFn();
+  export const getWorkspaceFolder = mockFn();
 }
 
 export enum TestRunProfileKind {
-    Run = 1,
-    Debug = 2,
-    Coverage = 3,
+  Run = 1,
+  Debug = 2,
+  Coverage = 3,
 }
 
 export namespace tests {
-    export const createTestController = mockFn();
+  export const createTestController = mockFn();
 }
 
 export namespace window {
-    export const createOutputChannel = mockFn();
+  export const createOutputChannel = mockFn();
 }
