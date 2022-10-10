@@ -56,7 +56,9 @@
     "vscode": "^1.59.0"
   },
   "activationEvents": [
-    "onStartupFinished"
+    "workspaceContains:**/protostar.toml",
+    "workspaceContains:**/*test*.cairo",
+    "onCommand:vscode-protostar-test-adapter.launchProtostarExtension"
   ],
   "contributes": {
     "configuration": {
@@ -74,6 +76,12 @@
           "scope": "resource"
         }
       }
-    }
+    },
+    "commands": [
+      {
+        "command": "vscode-protostar-test-adapter.launchProtostarExtension",
+        "title": "Launch Protostar Test Explorer"
+      }
+    ]
   }
 }
