@@ -71,6 +71,10 @@ Click on the Test icon <img src="img/test-explorer-icon.png" width="30"/>, you s
 
 Then interact with your tests as any other Test extension.
 
+Test Result will be displayed in test output console.
+
+![test view](img/test-results.gif)
+
 ## 🫶 Contributing
 
 Contribution guidelines are specified in [CONTRIBUTING.md](CONTRIBUTING.md).
