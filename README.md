@@ -75,6 +75,10 @@ Test results will be displayed in the test output console.
 
 ![test view](img/test-result.gif)
 
+This extension detects Protostar projects using the `protostar.toml` file and/or test files like `*test*.cairo`.
+If the automatic activation does not work, it is possible to manually launch the extension using the 
+"Launch Protostar Test Explorer" command accessible from the vscode menu (`Ctrl-Shift-P`).
+
 ## 🫶 Contributing
 
 Contribution guidelines are specified in [CONTRIBUTING.md](CONTRIBUTING.md).
