@@ -73,7 +73,7 @@ Then interact with your tests as any other Test extension.
 
 Test Result will be displayed in test output console.
 
-![test view](img/test-results.gif)
+![test view](img/test-result.gif)
 
 ## 🫶 Contributing
 
