@@ -47,10 +47,10 @@ export namespace tests {
 }
 
 export namespace window {
-    export const createOutputChannel = mockFn();
-    export const showInformationMessage = mockFn();
+  export const createOutputChannel = mockFn();
+  export const showInformationMessage = mockFn();
 }
 
 export namespace commands {
-    export const registerCommand = mockFn();
+  export const registerCommand = mockFn();
 }
