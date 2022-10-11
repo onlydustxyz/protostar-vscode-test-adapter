@@ -15,6 +15,7 @@ export type FileSystemWatcher = vscode.FileSystemWatcher;
 export type TestRunProfile = vscode.TestRunProfile;
 export type Disposable = vscode.Disposable;
 export type TextDocumentChangeEvent = vscode.TextDocumentChangeEvent;
+export type Command = vscode.Command;
 
 export const RelativePattern = mockFn();
 export const TestMessage = mockFn();
@@ -46,5 +47,10 @@ export namespace tests {
 }
 
 export namespace window {
-  export const createOutputChannel = mockFn();
+    export const createOutputChannel = mockFn();
+    export const showInformationMessage = mockFn();
+}
+
+export namespace commands {
+    export const registerCommand = mockFn();
 }

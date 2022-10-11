@@ -4,12 +4,12 @@ import { ResolveHandler } from './resolver';
 import { Parser } from './parser';
 
 export async function activate(context: vscode.ExtensionContext) {
-	const manualLaunchCommand = vscode.commands
-		.registerCommand("vscode-protostar-test-adapter.launchProtostarExtension", () => {
-			vscode.window.showInformationMessage('Protostar Test Explorer launched successfully!\n\
+	const showCmdMsg = 
+		vscode.window.showInformationMessage('Protostar Test Explorer launched successfully!\n\
 				(Please use this command only if the extension was not automatically launched, \
 				i.e. you changed protostar default configuration)');
-		})	
+	
+	const manualLaunchCommand = vscode.commands.registerCommand("vscode-protostar-test-adapter.launchProtostarExtension", () => showCmdMsg);
 	context.subscriptions.push(manualLaunchCommand);
 
 	const controller = vscode.tests.createTestController('protostar-test-controller', 'Protostar Test Controller');
