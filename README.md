@@ -27,7 +27,7 @@
 
 vscode extension to view protostar tests in the Test Explorer.
 
-This extension uses vscode native TEst API
+This extension uses vscode native Test API
 
 ## 🎗️ Prerequisites
 
@@ -71,7 +71,7 @@ Click on the Test icon <img src="img/test-explorer-icon.png" width="30"/>, you s
 
 Then interact with your tests as any other Test extension.
 
-Test Result will be displayed in test output console.
+Test results will be displayed in the test output console.
 
 ![test view](img/test-result.gif)
 
@@ -91,14 +91,14 @@ Here are the steps for local deployment:
 
 You should now see a second VS Code window, the Extension Development Host.
 Open a folder in this window and click the "Test" icon in the Activity bar.
-Now you should see the your test suite in the side panel:
+Now you should see your test suite in the side panel:
 
 ![test view](img/tests-view.png)
 
 ## 🌡️ Testing
 
 Unit tests are using `jest` framework.
-In order to run the tests, simply run the following command:
+To run the tests, simply run the following command:
 ```
 yarn test
 ```
@@ -120,7 +120,7 @@ yarn lint:fix
 
 ## 📄 License
 
-**Protostar Test Explorer** is released under the [MIT](LICENSE).
+**Protostar Test Explorer** is released under [MIT](LICENSE).
 
 ## ❓ Reference 
 
