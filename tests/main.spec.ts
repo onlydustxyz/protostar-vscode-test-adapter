@@ -57,10 +57,26 @@ describe('main', () => {
                 listener(changeEvent);
             });
 
+            const showCmdMsg = mockDeep<vscode.Command>();
+            vscode.window.showInformationMessage.calledWith(
+                'Protostar Test Explorer launched successfully!\n\
+				(Please use this command only if the extension was not automatically launched, \
+				i.e. you changed protostar default configuration)').mockReturnValue(showCmdMsg);
+
+            const manualLaunchCommand = mockDeep<vscode.Disposable>();
+            vscode.commands.registerCommand.calledWith(
+                "vscode-protostar-test-adapter.launchProtostarExtension", anyFunction())
+                .mockReturnValue(manualLaunchCommand)
+                .mockImplementation((command: string, callback: () => any) => {
+                   callback(); 
+                });
+
             const context = mockDeep<vscode.ExtensionContext>()
             await activate(context);
 
-            expect(context.subscriptions.push).toHaveBeenCalledWith(controller);
+            expect(context.subscriptions.push).toHaveBeenCalledTimes(2);
+
+            expect(context.subscriptions.push).toHaveBeenNthCalledWith(2, controller);
 
             expect(resolver.parseTestsInDocument).toHaveBeenCalledWith(changeEvent.document);
 
